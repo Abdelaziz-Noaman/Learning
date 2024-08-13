@@ -38,4 +38,14 @@
   -ms-border-radius: 8px;
   -o-border-radius: 8px;
   cursor: pointer;
+  opacity: 1;
+  transition: all 0.2s ease-in-out;
+  -webkit-transition: all 0.2s ease-in-out;
+  -moz-transition: all 0.2s ease-in-out;
+  -ms-transition: all 0.2s ease-in-out;
+  -o-transition: all 0.2s ease-in-out;
+}
+
+.button:hover {
+  opacity: 0.8;
 }
