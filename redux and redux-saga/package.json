@@ -1,5 +1,5 @@
 {
-  "name": "redux",
+  "name": "redux_and_redux-saga",
   "version": "0.1.0",
   "private": true,
   "scripts": {
