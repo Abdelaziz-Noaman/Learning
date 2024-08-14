@@ -1,11 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 type State = {
-  value: 0;
+  past: number[];
+  present: number;
+  future: number[];
 };
 
 const initialState: State = {
-  value: 0,
+  past: [],
+  present: 0,
+  future: [],
 };
 
 const counterSlice = createSlice({
@@ -13,14 +17,32 @@ const counterSlice = createSlice({
   initialState: initialState,
   reducers: {
     increment: (state) => {
-      state.value += 1;
+      state.past.push(state.present);
+      state.present += 1;
+      state.future = [];
     },
     decrement: (state) => {
-      if (state.value > 0) state.value -= 1;
+      state.past.push(state.present);
+      if (state.present > 0) state.present -= 1;
+      state.future = [];
+    },
+    undo: (state) => {
+      if (state.past.length > 0) {
+        const previousValue = state.past.pop() as number;
+        state.future.unshift(state.present);
+        state.present = previousValue;
+      }
+    },
+    redo: (state) => {
+      if (state.future.length > 0) {
+        const nextValue = state.future.shift() as number;
+        state.past.push(state.present);
+        state.present = nextValue;
+      }
     },
     reset: () => initialState,
   },
 });
 
-export const { increment, decrement, reset } = counterSlice.actions;
+export const { increment, decrement, undo, redo, reset } = counterSlice.actions;
 export default counterSlice.reducer;

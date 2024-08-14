@@ -1,13 +1,25 @@
 "use client";
 
 import { useAppDispatch, useAppSelector } from "@/store/store";
-import { increment, decrement, reset } from "@/store/slices/counterSlice";
+import {
+  increment,
+  decrement,
+  undo,
+  redo,
+  reset,
+} from "@/store/slices/counterSlice";
 
 import styles from "../../app/page.module.css";
 
 function HomeUI() {
   const dispatch = useAppDispatch();
-  const counterValue = useAppSelector((state) => state.counter.value);
+  const {
+    present: counterValue,
+    past,
+    future,
+  } = useAppSelector((state) => state.counter);
+
+  console.log(past, future);
 
   const handleIncrement = () => {
     dispatch(increment());
@@ -15,6 +27,14 @@ function HomeUI() {
 
   const handleDecrement = () => {
     dispatch(decrement());
+  };
+
+  const handleUndo = () => {
+    dispatch(undo());
+  };
+
+  const handleRedo = () => {
+    dispatch(redo());
   };
 
   const handleReset = () => {
@@ -31,6 +51,20 @@ function HomeUI() {
         </button>
         <button className={styles.button} onClick={handleDecrement}>
           Decrement
+        </button>
+        <button
+          className={styles.button}
+          onClick={handleUndo}
+          disabled={past.length === 0}
+        >
+          Undo
+        </button>
+        <button
+          className={styles.button}
+          onClick={handleRedo}
+          disabled={future.length === 0}
+        >
+          Redo
         </button>
         <button className={styles.button} onClick={handleReset}>
           Reset
