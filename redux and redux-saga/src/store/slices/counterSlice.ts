@@ -1,21 +1,49 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+type dataObj = {
+  id: number;
+  name: string;
+  email: string;
+  created_at: string;
+};
 
 type State = {
   past: number[];
   present: number;
   future: number[];
+  data: dataObj[];
+  loading: boolean;
+  error: string | null;
 };
 
 const initialState: State = {
   past: [],
   present: 0,
   future: [],
+  data: [],
+  loading: false,
+  error: null,
 };
 
 const counterSlice = createSlice({
   name: "counter",
   initialState: initialState,
   reducers: {
+    // For Redux-Saga testing...
+    fetchDataRequest: (state) => {
+      state.loading = true;
+      state.error = null;
+    },
+    fetchDataSuccess: (state, action: PayloadAction<dataObj[]>) => {
+      state.loading = false;
+      state.data = action.payload;
+    },
+    fetchDataFailure: (state, action: PayloadAction<string>) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
+    // For Counter state handling and testing undo and redo...
     increment: (state) => {
       state.past.push(state.present);
       state.present += 1;
@@ -44,5 +72,14 @@ const counterSlice = createSlice({
   },
 });
 
-export const { increment, decrement, undo, redo, reset } = counterSlice.actions;
+export const {
+  fetchDataRequest,
+  fetchDataSuccess,
+  fetchDataFailure,
+  increment,
+  decrement,
+  undo,
+  redo,
+  reset,
+} = counterSlice.actions;
 export default counterSlice.reducer;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "@/store/store";
 import {
   increment,
@@ -7,6 +8,7 @@ import {
   undo,
   redo,
   reset,
+  fetchDataRequest,
 } from "@/store/slices/counterSlice";
 
 import styles from "../../app/page.module.css";
@@ -17,9 +19,12 @@ function HomeUI() {
     present: counterValue,
     past,
     future,
+    data,
+    loading,
+    error,
   } = useAppSelector((state) => state.counter);
 
-  console.log(past, future);
+  console.log(loading, error, data);
 
   const handleIncrement = () => {
     dispatch(increment());
@@ -41,8 +46,19 @@ function HomeUI() {
     dispatch(reset());
   };
 
+  useEffect(() => {
+    dispatch(fetchDataRequest());
+  }, [dispatch]);
+
   return (
     <div className={styles.center}>
+      <div>
+        <h2>Loading: {JSON.stringify(loading)}</h2>
+        <br />
+        <h2>Error: {JSON.stringify(error)}</h2>
+        <br />
+        <h3>data: {JSON.stringify(data)}</h3>
+      </div>
       <h1>Counter</h1>
       <h1>{counterValue}</h1>
       <div className={styles.buttonsContainer}>
